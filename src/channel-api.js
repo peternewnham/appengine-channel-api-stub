@@ -1,6 +1,12 @@
 (function() {
 
     /**
+     * Lookup table for all created sockets. Keys are tokens,
+     * @type {{}}
+     */
+    var sockets = {};
+
+    /**
      * Channel class
      * @param {String} token    The token for the channel
      * @constructor
@@ -33,6 +39,8 @@
 
         handler = handler || {};
 
+        sockets[token] = this;
+
         this.token_ = token;
 
         this.onopen = handler.onopen;
@@ -47,6 +55,17 @@
      */
     Socket.prototype.close = function() {
 
+    };
+
+
+    /**
+     * Fetch an instantiated socket for use
+     * Use this to get a socket and call it's methods from outside of it's scope
+     * @param token
+     * @returns {Socket}
+     */
+    Socket._get = function(token) {
+        return sockets[token];
     };
 
     if (!window.goog) {

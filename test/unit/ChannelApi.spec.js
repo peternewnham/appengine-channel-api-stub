@@ -68,4 +68,30 @@ describe ('ChannelApi', function() {
 
     });
 
+    it ('sockets should be saved so they can be accessed from outside of creation scope', function() {
+
+        var channel1 = new goog.appengine.Channel('token1');
+        var socket1 = channel1.open();
+
+        var channel2 = new goog.appengine.Channel('token2');
+        var socket2 = channel2.open();
+
+        expect(goog.appengine.Socket._get('token1')).toBe(socket1);
+        expect(goog.appengine.Socket._get('token2')).toBe(socket2);
+
+        // test socket created within a closure
+
+        (function() {
+
+            var channel = new goog.appengine.Channel('private');
+            channel.open();
+
+        })();
+
+        var privateSocket = goog.appengine.Socket._get('private');
+        expect(privateSocket).toEqual(jasmine.any(goog.appengine.Socket));
+
+
+    });
+
 });
