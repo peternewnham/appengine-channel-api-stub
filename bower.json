@@ -1,0 +1,17 @@
+{
+  "name": "appengine-channel-api-stub",
+  "version": "1.0.0",
+  "authors": [
+    "Peter Newnham <pete@blarg.co.uk>"
+  ],
+  "description": "Stub for javascript client to the Google App Engine Channel API",
+  "main": "./dist/channel-api-stub.js",
+  "keywords": [
+    "app engine",
+    "channel api",
+    "stub",
+    "testing"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/wrakky/appengine-channel-api-stub"
+}
