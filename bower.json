@@ -12,6 +12,17 @@
     "stub",
     "testing"
   ],
+  "ignore": [
+    "src",
+    "test",
+    ".gitignore",
+    "gulpfile.js",
+    "package.json"
+  ],
   "license": "MIT",
-  "homepage": "https://github.com/wrakky/appengine-channel-api-stub"
+  "homepage": "https://github.com/wrakky/appengine-channel-api-stub",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/wrakky/appengine-channel-api-stub.git"
+  }
 }
