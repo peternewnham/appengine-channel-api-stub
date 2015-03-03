@@ -8,7 +8,7 @@ Includes a convenient way to access `Socket` objects outside of their declared s
 Directly from bower:  
 `bower install --save-dev appengine-channel-api-stub`
 
-Or manually download the [latest release](/releases).
+Or manually download the [latest release](./releases).
 
 ## Use
 
@@ -41,6 +41,24 @@ openChannel();
 var socket = goog.appengine.Socket._get('token');
 socket.onmessage('test'); // console.log('test')
 ```
+
+## Contribute
+
+Pull requests more than welcome. Just remember to add tests for any new functionality and make sure all existing tests still pass!
+
+Alternatively, report a bug or feature request using the [issue tracker](./issues).
+
+### Building Guide
+
+Fork the project and then in your terminal run the following commands:
+
+```bash
+$ git clone https://github.com/[username]/appengine-channel-api-stub.git
+$ cd appengine-channel-api-stub
+$ npm install
+```
+
+This will download the project and all gulp dependencies. Whilst developing, run the `gulp` command from the project directory which will automatically run tests as you develop. Then once finished run `gulp build` to run tests once more and generate a build in the `./dist` directory. Commit and push your changes and then submit a pull request.
 
 
 ## Full Example
@@ -139,6 +157,4 @@ describe('TestCtrl', function() {
     });
     
 });
-
-
 ```
