@@ -4,7 +4,7 @@
   "authors": [
     "Peter Newnham <pete@blarg.co.uk>"
   ],
-  "description": "Stub for javascript client to the Google App Engine Channel API",
+  "description": "Fully mocked stub for javascript client to the Google App Engine Channel API",
   "main": "./dist/channel-api-stub.js",
   "keywords": [
     "app engine",
