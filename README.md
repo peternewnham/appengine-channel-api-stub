@@ -8,7 +8,7 @@ Includes a convenient way to access `Socket` objects outside of their declared s
 Directly from bower:  
 `bower install --save-dev appengine-channel-api-stub`
 
-Or manually download the [latest release](./releases).
+Or manually download the [latest release](../../releases).
 
 ## Use
 
@@ -46,7 +46,7 @@ socket.onmessage('test'); // console.log('test')
 
 Pull requests more than welcome. Just remember to add tests for any new functionality and make sure all existing tests still pass!
 
-Alternatively, report a bug or feature request using the [issue tracker](./issues).
+Alternatively, report a bug or feature request using the [issue tracker](../../issues).
 
 ### Building Guide
 
