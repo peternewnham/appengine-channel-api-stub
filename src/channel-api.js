@@ -1,4 +1,4 @@
-(function() {
+var ChannelApi = (function() {
 
     /**
      * Lookup table for all created sockets. Keys are tokens,
@@ -77,4 +77,11 @@
     window.goog.appengine.Channel = Channel;
     window.goog.appengine.Socket = Socket;
 
+    return {
+        Channel: Channel,
+        Socket: Socket
+    };
+
 })();
+
+module.exports = ChannelApi;

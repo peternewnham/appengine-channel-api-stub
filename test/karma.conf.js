@@ -1,3 +1,5 @@
+var istanbul = require('browserify-istanbul');
+
 module.exports = function (config) {
 
     // toggle for coverage
@@ -8,36 +10,36 @@ module.exports = function (config) {
     var params = {
         basePath: '',
         dieOnError: false,
-        files: [],
+        files: [
+          'unit/ChannelApi.spec.js'
+        ],
+        logLevel: config.LOG_INFO,
         exclude: [],
         autoWatch: true,
-        frameworks: ['jasmine'],
+        frameworks: ['jasmine', 'browserify'],
         browsers: ['PhantomJS'],
         plugins: [
+            'karma-browserify',
             'karma-spec-reporter',
             'karma-phantomjs-launcher',
             'karma-jasmine',
             'karma-coverage',
             'karma-htmlfile-reporter'
         ],
-        reporters: ['spec', 'coverage', 'html'],
-        htmlReporter: {
-            outputFile: 'results/unit-tests.html'
+        reporters: ['spec', 'coverage'],
+        preprocessors: {
+            'unit/ChannelApi.spec.js': ['browserify']
+        },
+        coverageReporter: {
+            type: 'lcov',
+            dir: 'coverage/'
+        },
+        browserify: {
+            transform: [istanbul({
+                ignore: ['**/node_modules/**', '**/test/**']
+            })]
         }
     };
-
-    if (doCoverage) {
-
-        params.preprocessors = {
-            '../src/channel-api.js': 'coverage'
-        };
-
-        params.coverageReporter = {
-            type: 'html',
-            dir: 'coverage/'
-        };
-
-    }
 
     config.set(params);
 };

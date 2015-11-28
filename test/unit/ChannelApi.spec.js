@@ -1,3 +1,5 @@
+var ChannelApi = require('../../src/channel-api.js');
+
 describe ('ChannelApi', function() {
 
     var handlers;
@@ -11,6 +13,10 @@ describe ('ChannelApi', function() {
             onclose: function() {}
         };
 
+    });
+
+    it ('should return an object with Channel and Socket classes', function() {
+       expect(Object.keys(ChannelApi)).toEqual(['Channel', 'Socket']);
     });
 
     it ('goog.appengine.Channel should be defined', function() {
