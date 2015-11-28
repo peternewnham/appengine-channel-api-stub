@@ -1,6 +1,6 @@
 {
   "name": "appengine-channel-api-stub",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Stub for javascript client to the Google App Engine Channel API",
   "repository": {
     "type": "git",
