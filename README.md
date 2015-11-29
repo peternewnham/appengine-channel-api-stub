@@ -5,18 +5,24 @@ Includes a convenient way to access `Socket` objects outside of their declared s
 
 ## Installation
 
-Directly from bower:  
+NPM:
+`npm install appengine-channel-api-stub`
+
+Bower:  
 `bower install --save-dev appengine-channel-api-stub`
 
 Or manually download the [latest release](../../releases).
 
 ## Use
 
-Include the `channel-api-stub.js` file with your testing framework files. Any references to the Channel API client classes and methods will now be valid.
+Include the `channel-api-stub.js` file with your testing framework files. Any references to the Channel API 
+client classes and methods will now be valid.
 
 ## API
 
-In addition to all of the implemented API classes and methods, a special method has been added which allows the fetching of any `Socket` object from anywhere, allowing a socket to be accessed and triggered from outside it's declared scope such as in unit test functions where it may not have been otherwise accessible.
+In addition to all of the implemented API classes and methods, a special method has been added which allows the 
+fetching of any `Socket` object from anywhere, allowing a socket to be accessed and triggered from outside it's 
+declared scope such as in unit test functions where it may not have been otherwise accessible.
 
 #### goog.appengine.Socket._get(token)
 
@@ -44,7 +50,8 @@ socket.onmessage('test'); // console.log('test')
 
 ## Contribute
 
-Pull requests more than welcome. Just remember to add tests for any new functionality and make sure all existing tests still pass!
+Pull requests more than welcome. Just remember to add tests for any new functionality and make sure all existing 
+tests still pass!
 
 Alternatively, report a bug or feature request using the [issue tracker](../../issues).
 
@@ -58,103 +65,103 @@ $ cd appengine-channel-api-stub
 $ npm install
 ```
 
-This will download the project and all gulp dependencies. Whilst developing, run the `gulp` command from the project directory which will automatically run tests as you develop. Then once finished run `gulp build` to run tests once more and generate a build in the `./dist` directory. Commit and push your changes and then submit a pull request.
+This will download the project and all gulp dependencies. Whilst developing, run the `gulp` command from the 
+project directory which will automatically run tests as you develop. Then once finished run `gulp build` to run 
+tests once more and generate a build in the `./dist` directory. Commit and push your changes and then submit a 
+pull request.
 
 
 ## Full Example
 
-The general principal is to create/intercept the request for the Channel token, and then use the special `goog.appengine.Socket._get(token)` method to access the created socket and manually call the socket handler methods, passing in different messages for your test cases.
+The general principal is to create/intercept the request for the Channel token, and then use the special 
+`goog.appengine.Socket._get(token)` method to access the created socket and manually call the socket handler 
+methods, passing in different messages for your test cases.
 
-This simple example uses [Jasmine](http://jasmine.github.io/) testing framework and [Angular](https://angularjs.org/) but can be adapted for most other frameworks.
+This simple example uses [Jasmine](http://jasmine.github.io/) testing framework but can be easily
+adapted for most other frameworks.
 
 ```javascript
-// app.js
+// channel.js
 
-angular
-	.module('test-example')
-    .controller('TestCtrl', function($scope, $http) {
-    	
-        $scope.latestMessage = '';
-        
-        $scope.openChannel = function() {
+function openChannel() {
         	
-            $http.get('/openchannel').success(function(data) {
-            	
-                var token = data.token;
-                
-                var channel = new goog.appengine.Channel(token);
-                var socket = channel.open();
-                
-                socket.onmessage = function(message) {
-                	$scope.latestMessage = message;
-                };
-                
-            });
-            
-        };
-        
-    });
+  fetch('/openchannel').then(function(data) {
+    
+    // assume already converted to JSON
+    var token = data.token;
+    
+    var channel = new goog.appengine.Channel(token);
+    var socket = channel.open();
+    
+    socket.onmessage = function(message) {
+      processMessage(message);
+    };
+      
+  });
+  
+};
 
+function processMessage(message) {
+  // do something with the message
+}
+
+module.exports = {
+  openChannel: openChannel,
+  processMessage: processMessage
+};
 ```
 
 ```javascript
 // test.spec.js
 
-describe('TestCtrl', function() {
+var channel = require('channel');
 
-	var $scope, $httpBackend, $controller;
-	
-    beforeEach(module('test-example'));
+describe('ChannelApi Test', function() {
+
+  beforeEach(function() {
+    jasmine.Ajax.install();
+  });
+  
+  afterEach(function() {
+    jasmine.Ajax.uninstall();
+  });
     
-    beforeEach(inject(function(_$rootScope_, _$httpBackend_, _$controller_) {
-    	
-        $scope = _$rootScope_.$new();
-        $httpBackend = _$httpBackend_;
-        
-        $controller = _$controller_('TestCtrl', {
-        	'$scope': $scope
-        });
+  describe('when opening a channel', function() {
+    
+    var response;
+    
+    beforeEach(function() {
+    
+      spyOn(channel, 'processMessage');
+    
+      // set the channel token and mock the request for it
+      // we can then use this token in our tests to gain access to the socket
+      // created for the channel and trigger it's handlers
+      response = {
+        token: 'test-token';
+      };            
+      jasmine.Ajax.stubRequest('/openchannel').andReturn({
+        "responseText": response
+      });
         
     });
     
-    describe('when opening a channel', function() {
-    	
-        var response;
-        
-        beforeEach(function() {
-        	
-            // set the channel token and mock the request for it
-            // we can then use this token in our tests to gain access to the socket
-            // created for the channel and trigger it's handlers
-            response = {
-            	token: 'test-token';
-            };            
-            $httpBackend.expectGET('/openchannel').respond(response);
-            
-        });
-        
-        afterEach(function() {
-          $httpBackend.verifyNoOutstandingExpectation();
-          $httpBackend.verifyNoOutstandingRequest();        
-        });
-        
-        it ('should set the latest message correctly', function() {
-        	
-            $scope.openChannel();
-            $httpBackend.flush();
-            
-            // use goog.appengine.Socket._get() to access the socket within the controller
-            var socket = goog.appengine.Socket._get(response.token);
-            
-            // trigger an onmessage handler on the socket
-            socket.onmessage('test message');
-            
-            // check that the onmessage handler inside the controller was called and worked as expected
-            expect($scope.latestMessage).toBe('test message');
-            
-        });
+    it ('should process the message', function() {
+      
+      channel.openChannel();
+      
+      // use goog.appengine.Socket._get() to access the socket within the controller
+      var socket = goog.appengine.Socket._get(response.token);
+      
+      // trigger an onmessage handler on the socket
+      socket.onmessage('test message');
+      
+      // check that the onmessage handler inside the controller was called and worked as expected
+      expect(channel.processMessage).toHaveBeenCalledWith('test message');
         
     });
+      
+  });
     
 });
 ```
