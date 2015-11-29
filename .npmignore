@@ -1,0 +1,6 @@
+dist/
+test/
+.idea
+.gitignore
+bower.json
+gulpfile.js
