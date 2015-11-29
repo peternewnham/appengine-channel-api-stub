@@ -15,7 +15,16 @@ Or manually download the [latest release](../../releases).
 
 ## Use
 
-Include the `channel-api-stub.js` file with your testing framework files. Any references to the Channel API 
+### CommonJS
+
+```javascript
+require('appengine-channel-api-stub');
+// goog.appengine.Channel and goog.appengine.Socket will now be set
+```
+
+### Script
+
+Include the `dist/channel-api-stub[.min].js` file with your testing framework files. Any references to the Channel API 
 client classes and methods will now be valid.
 
 ## API
